@@ -68,12 +68,12 @@ if POSTGRES_NAME and POSTGRES_USER and POSTGRES_PASSWORD:
         }
     }
 else:
-DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+    DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
         }
-    }
 
 # Store sessions in signed cookies so the API root still works even if database
 # migrations have not been applied yet (e.g., on a fresh checkout).
