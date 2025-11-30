@@ -14,7 +14,7 @@ A Django + Django REST Framework project for storing EA FC 26 player data and th
    pip install -r requirements.txt
    ```
 2. Configure the database (PostgreSQL recommended). Set `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, and `POSTGRES_PORT` environment variables. If these are absent, the project defaults to SQLite for convenience.
-3. Apply migrations:
+3. Apply migrations (required to create auth/session tables and app models):
    ```bash
    python manage.py migrate
    ```
