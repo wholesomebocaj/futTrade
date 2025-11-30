@@ -27,7 +27,7 @@ class Player(models.Model):
 
     def latest_prices_by_platform(self):
         snapshots = self.price_snapshots.order_by('platform', '-timestamp')
-        if connection.features.supports_distinct_on_fields:
+        if getattr(connection.features, 'supports_distinct_on_fields', False):
             snapshots = snapshots.distinct('platform')
         return list(snapshots)
 

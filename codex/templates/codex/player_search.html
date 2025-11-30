@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FC26 Codex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem auto;
+            max-width: 960px;
+            color: #0f172a;
+            background: #f8fafc;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            margin: 0;
+        }
+
+        form {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="search"] {
+            flex: 1;
+            padding: 0.65rem 0.85rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 0.65rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: #0284c7;
+        }
+
+        .player {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+        }
+
+        .player header {
+            margin: 0 0 0.5rem;
+        }
+
+        .meta {
+            color: #475569;
+            margin: 0;
+        }
+
+        .prices {
+            margin-top: 0.75rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .price-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+        }
+
+        .price-card h4 {
+            margin: 0 0 0.35rem;
+            font-size: 1rem;
+        }
+
+        .price-card p {
+            margin: 0.1rem 0;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 2rem;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.75rem;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FC26 Codex</h1>
+        <a href="/api/codex/" style="color: #0ea5e9; text-decoration: none; font-weight: 600;">API</a>
+    </header>
+
+    <form role="search" action="" method="get">
+        <input
+            type="search"
+            name="q"
+            placeholder="Search players by name, club, nation, or card type"
+            value="{{ query }}"
+            aria-label="Search players"
+        />
+        <button type="submit">Search</button>
+    </form>
+
+    {% if players %}
+        {% for player in players %}
+            <article class="player">
+                <header>
+                    <h2 style="margin: 0 0 0.25rem;">{{ player.name }} ({{ player.position }})</h2>
+                    <p class="meta">Rating {{ player.rating }} · {{ player.club }} · {{ player.nation }} · {{ player.league }} · {{ player.card_type|capfirst }}</p>
+                </header>
+                {% with prices=player.latest_prices_by_platform %}
+                    {% if prices %}
+                        <section class="prices" aria-label="Latest prices">
+                            {% for price in prices %}
+                                <div class="price-card">
+                                    <h4>{{ price.platform|upper }} &mdash; {{ price.timestamp|date:"Y-m-d H:i" }} UTC</h4>
+                                    <p>Min: {{ price.min_price }}</p>
+                                    <p>Max: {{ price.max_price }}</p>
+                                    <p>Average: {{ price.average_price }}</p>
+                                </div>
+                            {% endfor %}
+                        </section>
+                    {% else %}
+                        <p class="meta">No price snapshots yet.</p>
+                    {% endif %}
+                {% endwith %}
+            </article>
+        {% endfor %}
+    {% else %}
+        <p class="empty">No players found. Try adjusting your search.</p>
+    {% endif %}
+</body>
+</html>
